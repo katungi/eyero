@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:tflite/tflite.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,15 +10,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: Text("eyero"),
-        backgroundColor: Colors.transparent,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("eyero"),
+          backgroundColor: Colors.transparent,
+        ),
+        body: Center(
+          child: MyImagePicker(),
+        ),
       ),
-      body: Center(
-        child: MyImagePicker(),
-      ),
-    ));
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
@@ -95,7 +98,15 @@ class _MyImagePickerState extends State<MyImagePicker> {
                 color: Colors.blue,
                 padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
               )),
-          result == null ? Text('Result') : Text(result)
+          result == null
+              ? Text('Result')
+              : CircularPercentIndicator(
+                  radius: 60.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text(result),
+                  progressColor: Colors.blue,
+                )
         ])));
   }
 }

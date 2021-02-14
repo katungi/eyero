@@ -1,111 +1,250 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-import './myImagePicker.dart';
+import 'package:liquid_swipe/liquid_swipe.dart';
 
-class OnBoardingPage extends StatefulWidget {
-  @override
-  _OnBoardingPageState createState() => _OnBoardingPageState();
+void main() {
+  runApp(
+    MySwiperApp(),
+  );
 }
 
-class _OnBoardingPageState extends State<OnBoardingPage> {
-  final introKey = GlobalKey<IntroductionScreenState>();
+class MySwiperApp extends StatefulWidget {
+  static final style = TextStyle(
+    fontSize: 30,
+    fontFamily: "Billy",
+    fontWeight: FontWeight.w600,
+  );
 
-  void _onIntroEnd(context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => MyImagePicker()),
-    );
+  @override
+  _MySwiperAppState createState() => _MySwiperAppState();
+}
+
+class _MySwiperAppState extends State<MySwiperApp> {
+  int page = 0;
+  LiquidController liquidController;
+  UpdateType updateType;
+
+  @override
+  void initState() {
+    liquidController = LiquidController();
+    super.initState();
   }
 
-  Widget _buildImage(String assetName) {
-    return Align(
-      child: Image.asset('assets/$assetName.jpg', width: 350.0),
-      alignment: Alignment.bottomCenter,
+  final pages = [
+    Container(
+      color: Colors.pink,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Image.asset(
+            'assets/main-eye.png',
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+          ),
+          Column(
+            children: <Widget>[
+              Text(
+                "Get Started",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "Just take an",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "Image of your eye",
+                style: MySwiperApp.style,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    Container(
+      color: Colors.deepPurpleAccent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Image.asset(
+            'assets/gallery.png',
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+          ),
+          Column(
+            children: <Widget>[
+              Text(
+                "You can",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "pick the image",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "From Gallery",
+                style: MySwiperApp.style,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    Container(
+      color: Colors.greenAccent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Image.asset(
+            'assets/take-picture-2.png',
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+          ),
+          Column(
+            children: <Widget>[
+              Text(
+                "Click Classify",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "To get ",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "Your results instantly",
+                style: MySwiperApp.style,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    Container(
+      color: Colors.redAccent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Image.asset(
+            'assets/main-eye.png',
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+          ),
+          Column(
+            children: <Widget>[
+              Text(
+                "Try It Out",
+                style: MySwiperApp.style,
+              ),
+              Text(
+                "Get Started!",
+                style: MySwiperApp.style,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  ];
+
+  Widget _buildDot(int index) {
+    double selectedness = Curves.easeOut.transform(
+      max(
+        0.0,
+        1.0 - ((page ?? 0) - index).abs(),
+      ),
+    );
+    double zoom = 1.0 + (2.0 - 1.0) * selectedness;
+    return new Container(
+      width: 25.0,
+      child: new Center(
+        child: new Material(
+          color: Colors.white,
+          type: MaterialType.circle,
+          child: new Container(
+            width: 8.0 * zoom,
+            height: 8.0 * zoom,
+          ),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0);
-    const pageDecoration = const PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyTextStyle: bodyStyle,
-      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-      pageColor: Colors.white,
-      imagePadding: EdgeInsets.zero,
-    );
-
-    return IntroductionScreen(
-      key: introKey,
-      pages: [
-        PageViewModel(
-          title: "Eyero",
-          body: "Bringing Eye tests at the convenience of your hands",
-          image: _buildImage('img1'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Getting started is simple",
-          body: "Go to the app, there are many options to get started",
-          image: _buildImage('img2'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Take a picture",
-          body:
-              "If you have the patient with you, take a picture with the phone camera",
-          image: _buildImage('img3'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "pick from gallery!",
-          body:
-              "If the patient is not around, you can always import the image from gallery",
-          image: _buildImage('img2'),
-          footer: RaisedButton(
-            onPressed: () {
-              introKey.currentState?.animateScroll(0);
-            },
-            child: const Text(
-              'FooButton',
-              style: TextStyle(color: Colors.white),
+    return MaterialApp(
+      home: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            LiquidSwipe(
+              pages: pages,
+              onPageChangeCallback: pageChangeCallback,
+              waveType: WaveType.liquidReveal,
+              liquidController: liquidController,
+              ignoreUserGestureWhileAnimating: true,
             ),
-            color: Colors.lightBlue,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: <Widget>[
+                  Expanded(child: SizedBox()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List<Widget>.generate(pages.length, _buildDot),
+                  ),
+                ],
+              ),
             ),
-          ),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Get your results!",
-          bodyWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("Click on Classify Image", style: bodyStyle),
-              Icon(Icons.edit),
-              Text("To get Your Results", style: bodyStyle),
-            ],
-          ),
-          image: _buildImage('img1'),
-          decoration: pageDecoration,
-        ),
-      ],
-      onDone: () => _onIntroEnd(context),
-      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-      showSkipButton: true,
-      skipFlex: 0,
-      nextFlex: 0,
-      skip: const Text('Skip'),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
-      dotsDecorator: const DotsDecorator(
-        size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeSize: Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/imagePicker');
+                  },
+                  child: Text("Skip to App"),
+                  color: Colors.white.withOpacity(0.01),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: FlatButton(
+                  onPressed: () {
+                    liquidController.jumpToPage(
+                        page: liquidController.currentPage + 1);
+                  },
+                  child: Text("Next"),
+                  color: Colors.white.withOpacity(0.01),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  pageChangeCallback(int lpage) {
+    setState(() {
+      page = lpage;
+    });
   }
 }

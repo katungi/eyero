@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => OnBoardingPage(),
+        '/': (context) => MySwiperApp(),
         '/imagePicker': (context) => MyImagePicker(),
       },
     );

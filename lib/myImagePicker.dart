@@ -4,6 +4,12 @@ import 'dart:io';
 import 'package:tflite/tflite.dart';
 
 class MyImagePicker extends StatefulWidget {
+  static final style = TextStyle(
+    fontSize: 20,
+    fontFamily: "Billy",
+    fontWeight: FontWeight.w400,
+  );
+
   @override
   _MyImagePickerState createState() => _MyImagePickerState();
 }

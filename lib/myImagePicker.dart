@@ -42,6 +42,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
 
     setState(() {
       result = output.toString();
+      print(result);
     });
   }
 
@@ -65,28 +66,34 @@ class _MyImagePickerState extends State<MyImagePicker> {
               Container(
                   margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
                   child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
                     onPressed: () => getImageFromCamera(),
-                    child: Text('Click Here To Select Image From Camera'),
+                    child: Text('Select Image From Camera'),
                     textColor: Colors.white,
-                    color: Colors.blue,
+                    color: Color(0xFF55006c),
                     padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                   )),
               Container(
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
                     onPressed: () => getImageFromGallery(),
-                    child: Text('Click Here To Select Image From Gallery'),
+                    child: Text('Pick From Gallery'),
                     textColor: Colors.white,
-                    color: Colors.blue,
+                    color: Color(0xFF55006c),
                     padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                   )),
               Container(
                   margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
                   child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
                     onPressed: () => classifyImage(),
-                    child: Text('Classify Image'),
+                    child: Text('Run Detection'),
                     textColor: Colors.white,
-                    color: Colors.blue,
+                    color: Color(0xFF55006c),
                     padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                   )),
               result == null ? Text('Result') : Text(result)

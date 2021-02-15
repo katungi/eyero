@@ -4,13 +4,24 @@ A project using machine learning and flutter to detect cataracts
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Start by cloning the application from github.
 
-A few resources to get you started if this is your first Flutter project:
+cd into the directory you want to clone it into
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+```terminal
+cd /your-path
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Now cd into the cloned directory and run:
+
+```terminal
+flutter pub get
+```
+
+That will get all the dependencies you need to get the app up and running
+
+Now run the app by either clicking the green run button on android studio or run:
+```terminal
+flutter run
+```
+Make sure you have an emulator or a USB connected device with USB debugging on.

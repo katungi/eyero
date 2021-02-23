@@ -18,6 +18,12 @@ Now cd into the cloned directory and run:
 flutter pub get
 ```
 
+To keep the code base up to date run:
+
+```terminal
+git pull origin main
+```
+
 That will get all the dependencies you need to get the app up and running
 
 Now run the app by either clicking the green run button on android studio or run:

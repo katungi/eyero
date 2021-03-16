@@ -21,7 +21,9 @@ flutter pub get
 To keep the code base up to date run:
 
 ```terminal
-git pull origin main
+git fetch --all
+
+git pull --rebase origin main
 ```
 
 That will get all the dependencies you need to get the app up and running

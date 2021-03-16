@@ -1,2 +1,3 @@
-0 Normal
-1 Cataracts
+0 cataracts
+1 normal
+2 glaucoma

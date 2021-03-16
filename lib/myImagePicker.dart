@@ -1,6 +1,8 @@
+import 'dart:io';
+
+import 'package:eyero/Result.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:tflite/tflite.dart';
 
 class MyImagePicker extends StatefulWidget {
@@ -18,6 +20,8 @@ class _MyImagePickerState extends State<MyImagePicker> {
   File imageURI;
   String result;
   String path;
+  var confidence;
+  var label;
 
   Future getImageFromCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -39,11 +43,25 @@ class _MyImagePickerState extends State<MyImagePicker> {
     await Tflite.loadModel(
         model: "assets/model_unquant.tflite", labels: "assets/labels.txt");
     var output = await Tflite.runModelOnImage(path: path);
-
+    var data = getResult(output);
     setState(() {
-      result = output.toString();
-      print(result);
+      // result = data.toString();
+      // print(result);
+      confidence = data[0].confidence.toString();
+      label = data[0].label.toString();
     });
+  }
+
+  List<Result> getResult(List<dynamic> output) {
+    List<Result> data = List();
+    output.forEach((element) {
+      Result item = Result(
+          confidence: element['confidence'],
+          label: element['label'],
+          index: element['index']);
+      data.add(item);
+    });
+    return data;
   }
 
   @override
@@ -96,7 +114,8 @@ class _MyImagePickerState extends State<MyImagePicker> {
                     color: Color(0xFF55006c),
                     padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                   )),
-              result == null ? Text('Result') : Text(result)
+              confidence == null ? Text('Confidence') : Text(confidence),
+              label == null ? Text('Label') : Text(label)
             ]))),
       ),
     );

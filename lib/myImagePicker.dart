@@ -115,7 +115,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
                     padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                   )),
               confidence == null ? Text('Confidence') : Text(confidence),
-              label == null ? Text('Label') : Text(label)
+              label == null ? Text('Label') : Text(label),
             ]))),
       ),
     );

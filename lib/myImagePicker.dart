@@ -22,6 +22,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
   String path;
   var confidence;
   var label;
+  var message;
 
   Future getImageFromCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -47,8 +48,16 @@ class _MyImagePickerState extends State<MyImagePicker> {
     setState(() {
       // result = data.toString();
       // print(result);
-      confidence = data[0].confidence.toString();
+      confidence = (data[0].confidence * 100).toStringAsFixed(2);
       label = data[0].label.toString();
+      double confidenceInt = double.parse(confidence);
+      if (confidenceInt >= 90) {
+        message = "You are well";
+      } else if (confidenceInt <= 90 && confidenceInt >= 60) {
+        message = "You need to Start Looking for Medical Attention!";
+      } else {
+        message = "You need to See an Optician Immediately!";
+      }
     });
   }
 
@@ -58,6 +67,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
       Result item = Result(
           confidence: element['confidence'],
           label: element['label'],
+          message: element['message'],
           index: element['index']);
       data.add(item);
     });
@@ -114,8 +124,9 @@ class _MyImagePickerState extends State<MyImagePicker> {
                     color: Color(0xFF55006c),
                     padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                   )),
-              confidence == null ? Text('Confidence') : Text(confidence),
+              confidence == null ? Text('Confidence') : Text(confidence + " %"),
               label == null ? Text('Label') : Text(label),
+              message == null ? Text('Message') : Text(message)
             ]))),
       ),
     );

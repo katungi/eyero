@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eyero/Result.dart';
+import 'package:eyero/myResultsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
@@ -15,6 +16,13 @@ class MyImagePicker extends StatefulWidget {
   @override
   _MyImagePickerState createState() => _MyImagePickerState();
 }
+
+// class Analysis {
+//   final double confidence;
+//   final String label, message;
+
+//   Analysis(this.confidence, this.label, this.message);
+// }
 
 class _MyImagePickerState extends State<MyImagePicker> {
   File imageURI;
@@ -116,14 +124,28 @@ class _MyImagePickerState extends State<MyImagePicker> {
               Container(
                   margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
                   child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
-                    onPressed: () => classifyImage(),
-                    child: Text('Run Detection'),
-                    textColor: Colors.white,
-                    color: Color(0xFF55006c),
-                    padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-                  )),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                      // onPressed: () => classifyImage(),
+                      // MyResultsPage();
+
+                      child: Text('Proceed'),
+                      textColor: Colors.white,
+                      color: Color(0xFF55006c),
+                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                      onPressed: () {
+                        classifyImage();
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) {
+                        //     return MyResultsPage(
+                        //       confidence: confidence,
+                        //       label: label,
+                        //       message: message,
+                        //     );
+                        //   }),
+                        // );
+                      })),
               confidence == null ? Text('Confidence') : Text(confidence + " %"),
               label == null ? Text('Label') : Text(label),
               message == null ? Text('Message') : Text(message)

@@ -1,2 +1,2 @@
-0 Normal
-1 Cataracts
+cataracts
+normal

@@ -22,6 +22,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
   String path;
   var confidence;
   var label;
+  var message;
 
   var percentageConfidence;
 
@@ -50,6 +51,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
         model: "assets/model_unquant.tflite", labels: "assets/labels.txt");
     var output = await Tflite.runModelOnImage(path: path);
     var data = getResult(output);
+
     setState(
       () {
         // result = data.toString();
@@ -58,6 +60,22 @@ class _MyImagePickerState extends State<MyImagePicker> {
         label = data[0].label.toString();
       },
     );
+
+    setState(() {
+      // result = data.toString();
+      // print(result);
+      confidence = (data[0].confidence * 100).toStringAsFixed(2);
+      label = data[0].label.toString();
+      double confidenceInt = double.parse(confidence);
+      if (confidenceInt >= 90) {
+        message = "You are well";
+      } else if (confidenceInt <= 90 && confidenceInt >= 60) {
+        message = "You need to Start Looking for Medical Attention!";
+      } else {
+        message = "You need to See an Optician Immediately!";
+      }
+    });
+
   }
 
   List<Result> getResult(List<dynamic> output) {
@@ -67,6 +85,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
       Result item = Result(
           confidence: element['confidence'],
           label: element['label'],
+          message: element['message'],
           index: element['index']);
       data.add(item);
     });
@@ -82,6 +101,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
       ),
       body: Center(
         child: Scaffold(
+
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -129,6 +149,53 @@ class _MyImagePickerState extends State<MyImagePicker> {
             ),
           ),
         ),
+
+            body: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+              imageURI == null
+                  ? Text('No image selected.')
+                  : Image.file(imageURI,
+                      width: 300, height: 200, fit: BoxFit.cover),
+              Container(
+                  margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                    onPressed: () => getImageFromCamera(),
+                    child: Text('Select Image From Camera'),
+                    textColor: Colors.white,
+                    color: Color(0xFF55006c),
+                    padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                  )),
+              Container(
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                    onPressed: () => getImageFromGallery(),
+                    child: Text('Pick From Gallery'),
+                    textColor: Colors.white,
+                    color: Color(0xFF55006c),
+                    padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                  )),
+              Container(
+                  margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                    onPressed: () => classifyImage(),
+                    child: Text('Run Detection'),
+                    textColor: Colors.white,
+                    color: Color(0xFF55006c),
+                    padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                  )),
+              confidence == null ? Text('Confidence') : Text(confidence + " %"),
+              label == null ? Text('Label') : Text(label),
+              message == null ? Text('Message') : Text(message)
+            ]))),
+
       ),
     );
   }

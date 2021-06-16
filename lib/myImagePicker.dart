@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eyero/Result.dart';
 import 'package:eyero/myResultsPage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
@@ -31,6 +32,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
   var confidence;
   var label;
   var message;
+  bool isResult = false;
 
   var percentageConfidence;
 
@@ -75,15 +77,17 @@ class _MyImagePickerState extends State<MyImagePicker> {
       confidence = (data[0].confidence * 100).toStringAsFixed(2);
       label = data[0].label.toString();
       double confidenceInt = double.parse(confidence);
-      if (confidenceInt >= 90) {
-        message = "You are well";
-      } else if (confidenceInt <= 90 && confidenceInt >= 60) {
+      if (confidenceInt > 70 && label == 'cataracts') {
+        message = "You need to See an Ophthalmologist Immediately!";
+      } else if (confidenceInt <= 70 &&
+          confidenceInt > 50 &&
+          label == 'cataracts') {
         message = "You need to Start Looking for Medical Attention!";
       } else {
-        message = "You need to See an Optician Immediately!";
+        message = "You are Relatively Well!";
       }
     });
-
+    isResult = true;
   }
 
   List<Result> getResult(List<dynamic> output) {
@@ -103,65 +107,14 @@ class _MyImagePickerState extends State<MyImagePicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Eyero"),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Center(
-        child: Scaffold(
-
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                imageURI == null
-                    ? Text('No image selected.')
-                    : Image.file(imageURI,
-                        width: 300, height: 200, fit: BoxFit.cover),
-                Container(
-                    margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      onPressed: () => getImageFromCamera(),
-                      child: Text('Select Image From Camera'),
-                      textColor: Colors.white,
-                      color: Color(0xFF55006c),
-                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-                    )),
-                Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      onPressed: () => getImageFromGallery(),
-                      child: Text('Pick From Gallery'),
-                      textColor: Colors.white,
-                      color: Color(0xFF55006c),
-                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-                    )),
-                Container(
-                    margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      onPressed: () => classifyImage(),
-                      child: Text('Run Detection'),
-                      textColor: Colors.white,
-                      color: Color(0xFF55006c),
-                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-                    )),
-                confidence == null ? Text('Confidence') : Text('$confidence%'),
-                label == null ? Text('Label') : Text(label),
-              ],
-            ),
-          ),
+        appBar: AppBar(
+          title: Text("Eyero"),
+          backgroundColor: Colors.transparent,
         ),
-
-            body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+        body: Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
               imageURI == null
                   ? Text('No image selected.')
                   : Image.file(imageURI,
@@ -196,13 +149,13 @@ class _MyImagePickerState extends State<MyImagePicker> {
                       // onPressed: () => classifyImage(),
                       // MyResultsPage();
 
-                      child: Text('Proceed'),
+                      child: Text('Run Detection'),
                       textColor: Colors.white,
                       color: Color(0xFF55006c),
                       padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-                      onPressed: () {
+                      onPressed: () async {
                         classifyImage();
-                        // Navigator.push(
+                        // await Navigator.push(
                         //   context,
                         //   MaterialPageRoute(builder: (context) {
                         //     return MyResultsPage(
@@ -213,12 +166,44 @@ class _MyImagePickerState extends State<MyImagePicker> {
                         //   }),
                         // );
                       })),
-              confidence == null ? Text('Confidence') : Text(confidence + " %"),
-              label == null ? Text('Label') : Text(label),
-              message == null ? Text('Message') : Text(message)
-            ]))),
+              isResult
+                  ? Container(
+                      margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
+                      child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0)),
+                          // onPressed: () => classifyImage(),
+                          // MyResultsPage();
 
-      ),
-    );
+                          child: Text('Proceed'),
+                          textColor: Colors.white,
+                          color: Color(0xFF55006c),
+                          padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                          onPressed: () async {
+                            // classifyImage();
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return MyResultsPage(
+                                  confidence: confidence,
+                                  label: label,
+                                  message: message,
+                                );
+                              }),
+                            );
+                          }))
+                  : Text(
+                      "To Proceed Click on Run Detection",
+                      style: GoogleFonts.raleway(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+              // confidence == null ? Text('Confidence') : Text(confidence + " %"),
+              // label == null ? Text('Label') : Text(label),
+              // message == null ? Text('Message') : Text(message)
+            ])));
   }
 }
